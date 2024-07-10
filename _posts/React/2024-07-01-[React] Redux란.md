@@ -1,7 +1,7 @@
 ---
 title: "[React] Redux란"
 categories:
-  - Spring
+  - React
 tags:
 toc: true
 toc_sticky: true

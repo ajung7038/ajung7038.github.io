@@ -213,6 +213,12 @@ ControllerTest에서의 setUp과 CheckPageControllerTest에서의 setUp의 이�
 
 이후, ControllerTest에서의 setUp을 setUpAbstract로 바꿔주니 정상 작동했다.
 
+https://www.inflearn.com/questions/933072/beforeeach-%EB%A5%BC-%ED%95%98%EC%9C%84-%ED%81%B4%EB%9E%98%EC%8A%A4%EC%97%90%EC%84%9C-%EB%8B%A4%EC%8B%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B2%83%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%A7%88%EB%AC%B8-%EB%93%9C%EB%A6%BD%EB%8B%88%EB%8B%A4
+
+참고한 자료는 위와 같다.
+
+다음부터는 꼼꼼히 확인하도록 해야겠다.
+
 ## ✨ 느낀 점
 
 이번 문제를 통해, 무작정 구글링하는 것보다는 왜 이러한 오류가 떴고 이를 해결하기 위해 어떤 부분을 중점적으로 보아야 하는지 깨달았던 것 같다. 구글링하는 것도 중요하지만, 정말 중요한 건 이론을 알고 이러한 문제가 발생한 원인을 제대로 파악하는 것이라고 생각했다.

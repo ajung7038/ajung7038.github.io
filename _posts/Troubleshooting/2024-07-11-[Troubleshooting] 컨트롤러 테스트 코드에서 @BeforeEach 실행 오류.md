@@ -1,5 +1,5 @@
 ---
-title: "[Error] 컨트롤러 테스트 코드에서 @BeforeEach 실행 오류"
+title: "[Troubleshooting] 컨트롤러 테스트 코드에서 @BeforeEach 실행 오류"
 categories:
   - Spring
   - Troubleshooting

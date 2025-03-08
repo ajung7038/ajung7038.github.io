@@ -1,5 +1,5 @@
 ---
-title: "[Java] Item 13 : clone 재정의는 주의해서 진행하라
+title: "[Java] Item 13 : clone 재정의는 주의해서 진행하라"
 categories:
   - Effective Java
 tags:

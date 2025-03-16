@@ -1,7 +1,7 @@
 ---
 title: "HTTP"
 layout: archive
-permalink: categories/article
+permalink: categories/http
 author_profile: true
 sidebar_main: true
 ---

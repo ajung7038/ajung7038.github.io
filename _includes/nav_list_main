@@ -8,6 +8,7 @@
       <li>
             📂 <span style="font-family:'Cafe24Oneprettynight';">전체 글 수</style> <span style="font-family:'Coming Soon';">{{sum}}</style> <span style="font-family:'Cafe24Oneprettynight';">개</style> 
       </li>
+    ;   Java
       <li>
         <span class="nav__sub-title">Java</span>
             <ul>
@@ -24,6 +25,78 @@
                     {% endif %}
                 {% endfor %}
             </ul>
+      </li>
+      ; 논문
+      <li>
+        <span class="nav__sub-title">Article</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "Article" %}
+                        <li><a href="/categories/article" class="">테스트 자동화 ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+      </li>
+      ; Server
+      <li>
+        <span class="nav__sub-title">Server</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "Spring" %}
+                        <li><a href="/categories/spring" class="">Spring ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "HTTP" %}
+                        <li><a href="/categories/http" class="">HTTP ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "MVC" %}
+                        <li><a href="/categories/mvc" class="">Spring MVC ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+      </li>
+
+      ; Troubleshooting
+      <li>
+        <span class="nav__sub-title">Troubleshooting</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "Troubleshooting" %}
+                        <li><a href="/categories/troubleshooting" class="">Troubleshooting ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul
+      </li>
+
+      ; OS
+      <li>
+        <span class="nav__sub-title">OS</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "File System" %}
+                        <li><a href="/categories/filesystem" class="">File System ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul
+      </li>
+
+      ; Front
+      <li>
+        <span class="nav__sub-title">Frontend</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "React" %}
+                        <li><a href="/categories/react" class="">React ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul
       </li>
   </ul>
 </nav>

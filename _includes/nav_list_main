@@ -68,7 +68,7 @@
                         <li><a href="/categories/troubleshooting" class="">Troubleshooting ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
-            </ul
+            </ul>
       </li>
 
       <li>
@@ -79,7 +79,14 @@
                         <li><a href="/categories/filesystem" class="">File System ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
-            </ul
+            </ul>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "File Forensic" %}
+                        <li><a href="/categories/fileforensic" class="">File Forensic ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
       </li>
 
       <li>
@@ -90,7 +97,7 @@
                         <li><a href="/categories/react" class="">React ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
-            </ul
+            </ul>
       </li>
   </ul>
 </nav>

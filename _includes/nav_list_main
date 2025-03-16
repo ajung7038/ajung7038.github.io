@@ -8,7 +8,6 @@
       <li>
             📂 <span style="font-family:'Cafe24Oneprettynight';">전체 글 수</style> <span style="font-family:'Coming Soon';">{{sum}}</style> <span style="font-family:'Cafe24Oneprettynight';">개</style> 
       </li>
-    ;   Java
       <li>
         <span class="nav__sub-title">Java</span>
             <ul>
@@ -26,7 +25,6 @@
                 {% endfor %}
             </ul>
       </li>
-      ; 논문
       <li>
         <span class="nav__sub-title">Article</span>
             <ul>
@@ -37,7 +35,6 @@
                 {% endfor %}
             </ul>
       </li>
-      ; Server
       <li>
         <span class="nav__sub-title">Server</span>
             <ul>
@@ -63,7 +60,6 @@
             </ul>
       </li>
 
-      ; Troubleshooting
       <li>
         <span class="nav__sub-title">Troubleshooting</span>
             <ul>
@@ -75,7 +71,6 @@
             </ul
       </li>
 
-      ; OS
       <li>
         <span class="nav__sub-title">OS</span>
             <ul>
@@ -87,7 +82,6 @@
             </ul
       </li>
 
-      ; Front
       <li>
         <span class="nav__sub-title">Frontend</span>
             <ul>

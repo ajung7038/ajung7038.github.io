@@ -1,14 +1,12 @@
 ---
 title: "[Programmers] 봉인된 주문 (level 3)"
 categories:
-  - Effective Java
+  - Programmers
 tags:
 toc: true
 toc_sticky: true
 date: 2025-05-17 16:10:00 +0900
 ---
-
-# 📌 [Programmers] 봉인된 주문 (level 3)
 
 ## 아이디어
 

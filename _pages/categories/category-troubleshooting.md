@@ -1,7 +1,7 @@
 ---
 title: "Troubleshooting"
 layout: archive
-permalink: categories/article
+permalink: categories/troubleshooting
 author_profile: true
 sidebar_main: true
 ---

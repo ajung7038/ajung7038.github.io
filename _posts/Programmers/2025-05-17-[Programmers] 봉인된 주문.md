@@ -106,7 +106,7 @@ class Solution {
 - for문으로 돌면서 queue에 정렬된 원소 넣어주기
 - Arrays.sort()
     
-![sort_image](image.png)
+![sort image](../../assets/image/Algorithm/Programmers/sort-image.png)
 
 - Arrays.sort() 함수는 제네릭 타입의 a와 객체를 비교할 수 있는 클래스인 Comparator을 인자로 받음 (T 타입이 들어갈 수 있도록 한정 타입으로 제한)
 - 이때 Comparator과 Comparable을 헷갈리지 말아야 함

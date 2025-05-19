@@ -1,7 +1,7 @@
 ---
-title: "[Algorithm] 완전범죄"
+title: "[Programmers] 완전범죄"
 categories:
-  - Algorithm
+  - Programmers
 tags:
 toc: true
 toc_sticky: true

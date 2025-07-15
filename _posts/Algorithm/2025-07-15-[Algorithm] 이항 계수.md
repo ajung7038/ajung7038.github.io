@@ -1,5 +1,5 @@
 ---
-title: "[Algorithm] 우선순위 큐"
+title: "[Algorithm] 이항 계수"
 categories:
   - Algorithm
 tags:
@@ -11,7 +11,8 @@ date: 2025-07-15 08:38:00 +0900
 ## 이항 계수
 - 두 개의 항 (이항) 을 전개하여 계수로 나타낸 것
 
-<img width="2560" height="1843" alt="image" src="https://github.com/user-attachments/assets/91d8cb6f-1e27-4955-9dcf-c1ed0fe82a1f" />
+![nCrImg](../../assets/image/Algorithm/nCr.png)
+
 
 이는 곱셈 공식으로 계산이 가능하다. => nCr
 

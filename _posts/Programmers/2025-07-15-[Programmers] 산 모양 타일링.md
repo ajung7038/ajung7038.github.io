@@ -1,5 +1,5 @@
 ---
-title: "[Programmers] 홀짝트리"
+title: "[Programmers] 산 모양 타일링"
 categories:
   - Programmers
 tags:

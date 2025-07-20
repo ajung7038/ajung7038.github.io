@@ -80,9 +80,9 @@ google:
   search_engine_id: # YOUR_SEARCH_ENGINE_ID
   instant_search: # false (default), true
 # SEO Related
-google_site_verification:
+google_site_verification: "nA8R_jvLLoIM0uKhwpAZ5zBDy9yPPmh8ylbvq9o-Is4"
 bing_site_verification:
-naver_site_verification:
+naver_site_verification: "07d37e7815a07338c268635d376a76548e25afb2"
 yandex_site_verification:
 baidu_site_verification:
 

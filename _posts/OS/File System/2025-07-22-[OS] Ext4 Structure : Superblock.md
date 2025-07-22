@@ -9,9 +9,12 @@ date: 2025-07-22 12:52:00 +0900
 ---
 
 <strong>[linux kernel sourse tree](https://github.com/torvalds/linux)의 깃허브 코드를 참조해 Ext4의 주요 구조체를 정리한 글입니다.</strong>
-</br>
-Ext4 주요 구조체 정리 : [Superblock](), [inode](), [dentry](), [Block Group](), [extent](), [orphan](), [Journal]()
 {: .notice}
+
+
+> Ext4 주요 구조체 정리
+<br/>
+[Superblock](), [inode](), [dentry](), [Block Group](), [extent](), [orphan](), [Journal]()
 
 # 📌 Ext4 Superblock
 

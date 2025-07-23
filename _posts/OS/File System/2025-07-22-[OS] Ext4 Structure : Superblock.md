@@ -14,7 +14,7 @@ date: 2025-07-22 12:52:00 +0900
 
 > Ext4 주요 구조체 정리
 <br/>
-[Superblock](https://ajung7038.github.io/file%20system/OS-Ext4-Structure-Superblock/), [inode](https://ajung7038.github.io/file%20system/OS-Ext4-Structure-inode/), [dentry](), [Block Group](), [extent](), [orphan](), [Journal]()
+[Superblock](https://ajung7038.github.io/file%20system/OS-Ext4-Structure-Superblock), [inode](https://ajung7038.github.io/file%20system/OS-Ext4-Structure-inode), [dentry](https://ajung7038.github.io/file%20system/OS-Ext4-Structure-dentry), [Block Group](), [extent](), [orphan](), [Journal]()
 
 # 📌 Ext4 Superblock
 

@@ -62,8 +62,7 @@ date: 2025-07-30 17:32:00 +0900
 | `-f <파일명>`   | 복구할 파일 이름을 지정 (와일드카드 사용 가능) |
 
 
-Time Options -a -b -t
-------------------------
+### ✨ Time Options -a -b -t
 : 저널 데이터를 검색하는 시간 범위와 inode 데이터의 시간을 결정
 
 | 옵션               | 설명     |
@@ -74,8 +73,7 @@ Time Options -a -b -t
 
 
 
-File input and output options  -d -i -j
----------------------------------------
+### ✨ File input and output options  -d -i -j
 : 출력 디렉토리, 입력 파일 목록 및 외부 저널 파일로 지정
 
 | 옵션           | 설명                                      |
@@ -86,8 +84,7 @@ File input and output options  -d -i -j
 
 
 
-Action Options  -l -L -r -R -m -M 
-----------------------------------
+### ✨ Action Options  -l -L -r -R -m -M 
 : 실질적인 동작을 수행하는 핵심 옵션들
 
 | 옵션   | 설명  |
@@ -100,8 +97,7 @@ Action Options  -l -L -r -R -m -M
 | `-M` | **inode + dentry + orphan + journal + magic scan** 을 모두 수행 <br> → -r, -R, -m 기능을 통합하여 복구 |
 
 
-Expert Options  -s -n -c -D 
--------------------------
+### ✨ Expert Options  -s -n -c -D 
 : 손상된 파일 시스템 등에 대해 사용
 
 | 옵션          | 설명                                                   |
@@ -205,7 +201,6 @@ if ((mode & COMMAND_INODE) && (mode & RECOVER_INODE))
 		if (i_list) ring_del(i_list);
 	}
 ```
-
 
 ## 🫧 참고 자료
 - [ext4magic 복구](https://sourceforge.net/projects/ext4magic/)

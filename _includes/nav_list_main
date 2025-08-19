@@ -123,5 +123,15 @@
                 {% endfor %}
             </ul>
       </li>
+      <li>
+        <span class="nav__sub-title">Books</span>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "총균쇠" %}
+                        <li><a href="/categories/books/guns-germs-steel" class="">총균쇠 ({{category[1].size}})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+      </li>
   </ul>
 </nav>

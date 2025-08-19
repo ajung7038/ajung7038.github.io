@@ -76,14 +76,14 @@
             <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "File System" %}
-                        <li><a href="/categories/filesystem" class="">File System ({{category[1].size}})</a></li>
+                        <li><a href="/categories/file-system" class="">File System ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
             <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "File Forensic" %}
-                        <li><a href="/categories/fileforensic" class="">File Forensic ({{category[1].size}})</a></li>
+                        <li><a href="/categories/file-forensic" class="">File Forensic ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
@@ -118,7 +118,7 @@
             <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "BOJ" %}
-                        <li><a href="/categories/BOJ" class="">BOJ ({{category[1].size}})</a></li>
+                        <li><a href="/categories/boj" class="">BOJ ({{category[1].size}})</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>

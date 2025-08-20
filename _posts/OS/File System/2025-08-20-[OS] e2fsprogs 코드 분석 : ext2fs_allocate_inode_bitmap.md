@@ -39,8 +39,7 @@ date: 2025-08-20 10:57:00 +0900
 
 ### ✨ ext2fs_allocate_inode_bitmap(fs)
 
-- libs/ext2fs/bitops.h, $430
-- 블록 비
+- libs/ext2fs/bitmaps.c, $57
 
 ```c
 // fs : 파일 시스템 구조체

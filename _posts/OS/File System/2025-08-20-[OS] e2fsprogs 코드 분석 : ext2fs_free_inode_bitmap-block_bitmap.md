@@ -1,5 +1,5 @@
 ---
-title: "[OS] e2fsprogs 코드 분석 : ext2fs_free_inode_bitmap"
+title: "[OS] e2fsprogs 코드 분석 : ext2fs_free_inode_bitmap/block_bitmap"
 categories:
   - File System
 tags:
@@ -13,8 +13,9 @@ date: 2025-08-20 11:33:00 +0900
 
 # 📌 e2fsprogs 코드 분석 : ext2fs_free_inode_bitmap
 
-## 🫧 ext2fs_free_inode_bitmap();
+## 🫧 ext2fs_free_inode_bitmap()/ext2fs_free_block_bitmap();
 - inode 비트맵 해제 시 사용
+- block 비트맵 해제 시 사용
 
 
 ## 🫧 과정
@@ -24,15 +25,27 @@ date: 2025-08-20 11:33:00 +0900
 ## 🫧 특징
 - 구조체를 초기화하기 전 매직 넘버를 먼저 초기화함
 	- 이후에 다시 접근하려 할 때 오류를 방지할 수 있음
+- inode bitmap과 block bitmap 모두 내부적으로는 `완전히 똑같은` 함수를 사용함.
 
 ## 🫧 코드
 
 ### ✨ ext2fs_free_inode_bitmap(fs)
 
-- libs/ext2fs/bitmaps.c, $57
+- libs/ext2fs/bitmaps.c, $33
 
 ```c
 void ext2fs_free_inode_bitmap(ext2fs_inode_bitmap bitmap)
+{
+	ext2fs_free_generic_bmap(bitmap);
+}
+```
+
+### ✨ ext2fs_free_block_bitmap(fs)
+
+- libs/ext2fs/bitmaps.c, $38
+
+```c
+void ext2fs_free_block_bitmap(ext2fs_block_bitmap bitmap)
 {
 	ext2fs_free_generic_bmap(bitmap);
 }

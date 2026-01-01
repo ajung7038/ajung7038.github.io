@@ -1,5 +1,5 @@
 ---
-title: "[Performance] 부하 테스트 툴 선택하기"
+title: "[Performance] Prometheus & Grafana로 모니터링 도입하기"
 categories:
   - Performance
 tags:
@@ -187,7 +187,7 @@ Prometheus 단독으로 써도 되고, Grafana가 아닌 다른 대안도 존재
 이제 진짜로 구현해보자..
 
 
-## 🫧 Prometheus 도입
+## 🫧 Prometheus & Grafana 도입
 
 ### ✨ 환경 설정하기
 

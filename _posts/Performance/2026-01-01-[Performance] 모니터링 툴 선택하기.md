@@ -283,6 +283,25 @@ docker-compose는 도커를 한 번에 돌릴 수 있도록 도와주는 도구�
 
 또한, Prometheus, Grafana 모두 docker 환경에서 동시에 돌릴 것이므로, docker-compose를 활용하였다.
 
+```yml
+version: "3.8"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+```
+
 이제 실행을 위한 준비가 완료되었다!!!
 
 

@@ -413,9 +413,14 @@ Prometheus는 데이터 수집을 위한 것이고, Grafana는 시각화 툴이�
 3) URL 입력
 ![alt text](../../assets/image/Performance/monitoring/url.png)
 
+- http://prometheus:9090
+
 4) Save & test -> Success 확인
+
 ![alt text](../../assets/image/Performance/monitoring/saveAndTest.png)
+
 다음처럼 뜨면 성공이다.
+
 ![alt text](../../assets/image/Performance/monitoring/success.png)
 
 

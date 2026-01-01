@@ -432,6 +432,8 @@ Prometheus는 데이터 수집을 위한 것이고, Grafana는 시각화 툴이�
 ![alt text](../../assets/image/Performance/monitoring/dashboard.png)
 
 2) 오른쪽 import
+
+
 ![alt text](../../assets/image/Performance/monitoring/import.png)
 
 3) ID 입력

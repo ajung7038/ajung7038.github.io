@@ -1,5 +1,5 @@
 ---
-title: "[Performance] Multi-Poller 적용을 통한 웹소켓 병목 제거 및 Latency 70% 감소"
+title: "[Performance] Multi-Poller 적용을 통한 웹소켓 병목 제거 및 Max Latency 70% 감소"
 categories:
   - Performance
 tags:
@@ -93,8 +93,6 @@ ScenarioBuilder scn = scenario("Code Execution WS")
 ![alt text](../../assets/image/Performance/sleepTest/testResultAll.png)
 
 테스트의 전반적인 결과이다. 모두 성공으로 응답하고 있음을 알 수 있다.
-
-(여기서 All Requests가 아닌 개별적인 요청에 집중하기로 하였다. send code의 내용이 희석되어 결과가 불분명하기 때문이다.)
 
 여기서 p99까지는 0.1의 응답률을 보이지만, Max 값은 1초가 넘어가는 것을 확인할 수 있다.
 

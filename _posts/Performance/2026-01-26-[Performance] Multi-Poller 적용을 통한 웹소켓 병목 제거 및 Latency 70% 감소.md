@@ -100,7 +100,7 @@ ScenarioBuilder scn = scenario("Code Execution WS")
 
 ![alt text](../../assets/image/Performance/sleepTest/testResultAllResponse.png)
 
-응답 퍼센트를 볼 때, 해당 부분이 확연하게 드러난다. 모든 부하가 끝나갈 때쯤 툭 튀는 현상으로, 무려 p75부터 1064의 특정한 값을 갖고 있었다.
+응답 퍼센트를 볼 때, 해당 부분이 확연하게 드러난다. 모든 부하가 끝나갈 때쯤 툭 튀는 현상으로, 064의 특정한 값을 갖고 있었다.
 
 Gatling 환경이 내 컴퓨터이므로, 이에 대해 영향이 갔을까 싶어 같은 환경에서 테스트를 세 번 해 봐도 튀는 현상은 사라지지 않았다.
 
@@ -114,6 +114,7 @@ Gatling 환경이 내 컴퓨터이므로, 이에 대해 영향이 갔을까 싶�
 
 ### ✨ 가설 1: WS 연결 실패 (참)
 - WS Connection에서도 같은 시간대의 튐 현상이 관찰되었다.
+- 게다가 p75부터 이런 현상이 나타나고 있었다.
 
 ![alt text](../../assets/image/Performance/sleepTest/hypo1.png)
 
@@ -169,6 +170,7 @@ Gatling 환경이 내 컴퓨터이므로, 이에 대해 영향이 갔을까 싶�
 
 - 1,000ms을 웃도는 지연 시간이 지속적으로 발생
 </br> -> 무언가 타임아웃에 의해 밀린다고 생각했음 (너무 일정했음)
+
 - `가설 4`에 따라 네트워크 문제는 아님
 - `가설 5`에 따라 대기하는 스레드가 많다는 사실을 알았음
 - 강제 지연 후 서버를 끊어버렸는데, 이때 `java.nio.channels.ClosedChannelException` 오류가 발생하였음
@@ -217,7 +219,7 @@ public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> container
 - 1000으로 적혀 있는 부분을 바꾸며 테스트를 시도해 보았다.
     - 1초(기본 테스트) -> 5초 -> 0.5초 -> 2초
 
-그러나 정말 놀랍게도 여전히 <U>**1062**</U>를 유지하고 있었다.
+그러나 정말 놀랍게도 여전히 **<U>1062</U>**를 유지하고 있었다.
 
 솔직히 맞는 줄 알았는데 ...
 
@@ -290,7 +292,6 @@ Handshake가 일어나는 상황을 대략적으로 정리하자면 다음과 �
 ![alt text](../../assets/image/Performance/sleepTest/testRes2.png)
 
 
-
 ## 🫧 결론
 
 응답률이 튀는 현상을 관찰하고, 이에 대한 가설을 11가지 세운 끝에 문제를 해결할 수 있었다.
@@ -299,10 +300,10 @@ Handshake가 일어나는 상황을 대략적으로 정리하자면 다음과 �
 
 ![alt text](../../assets/image/Performance/sleepTest/resultFinal.png)
 
-- `Max`: 1,000ms -> 300ms <U>**(약 70% 감소)**</U>
-- `p99`: 146ms -> 110ms <U>**(약 25% 감소)**</U>
-- `Check result(Max)`: 293ms -> 168ms <U>**(약 42.6% 감소)**</U>
-- `Close(Max)`: 248ms -> 124ms <U>**(약 50% 감소)**</U>
+- `Max`: 1,000ms -> 300ms **<U>(약 70% 감소)</U>**
+- `p99`: 146ms -> 110ms **<U>(약 25% 감소)</U>**
+- `Check result(Max)`: 293ms -> 168ms **<U>(약 42.6% 감소)</U>**
+- `Close(Max)`: 248ms -> 124ms **<U>(약 50% 감소)</U>**
 
 I/O 이벤트가 많은 API 특성 상, I/O 처리를 위한 `PollerThreadCount` 값을 늘려줌으로써 API 결과를 받는 부분도 응답 시간을 줄일 수 있었던 것 같다.
 (output 전달 시 패킷을 통해 전달, 이 과정에서 Poller 호출)

@@ -1,5 +1,5 @@
 ---
-title: "[Performance] Multi-Poller 적용을 통한 웹소켓 병목 제거 및 Max Latency 69.3% 감소"
+title: "[Performance] Multi-Poller 적용을 통한 웹소켓 병목 제거 및 Max Latency 75.7% 감소"
 categories:
   - Performance
 tags:

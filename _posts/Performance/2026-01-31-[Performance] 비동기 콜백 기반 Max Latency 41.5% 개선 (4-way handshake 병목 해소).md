@@ -515,7 +515,7 @@ protected void handleTextMessage(WebSocketSession session, TextMessage message) 
 
 특히, `TCPAbortOnData`가 1,600 -> 135로 데이터 손실을 **<U>91% 감소</U>**시킬 수 있었다.
 
-![alt text](image.png)
+![alt text](../../assets/image/Performance/cpuMaxLatency/delay100ms.png)
 
 그러나 전체적으로 응답의 속도는 늘어남을 확인할 수 있는데, 이는 `동시 접속자 수가 늘어 병목이 심화`되었거나 `버퍼에 쓰는 시간에 의한 지연`을 이유로 생각하고 있다.
 

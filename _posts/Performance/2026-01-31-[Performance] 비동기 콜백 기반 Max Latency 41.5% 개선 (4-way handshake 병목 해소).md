@@ -316,50 +316,25 @@ Max Latency 수치가 잡힌 것을 알 수 있다.
 
 <br/>
 
-다음은 주요 지표이다.
+실제로 `netstat`로 확인 결과, `DelayedACKs`이 **<U>317</U>**번 일어났음을 알 수 있다.
 
-- `TCPAbortOnLinger`: SO_LINGER 설정에 의해 소켓이 강제 종료된 횟수
-- `DelayedACKs`: ACK를 즉시 보내지 않고 타이머가 만료될 때까지 기다렸다가 보낸 횟수
-- `TCPAbortOnData`: 데이터를 보내는 중 연결이 예기치 않게 끊긴 소켓의 수 
-- `TW(TimeWait)`: 정상 종료 절차(FIN)를 거친 소켓 수
-- `TCPTimeouts`: 재전송 타임아웃
+추가로 TCPTimeouts는 저번 글(Multi-Poller 도입)에서와 마찬가지로 변화하지 않았다. 지연이 문제일 뿐, 재전송은 일어나지 않았기 때문이다.
 
 <br/>
 
-실제로 `netstat`로 확인 결과, 변화한 주요 지표의 수치는 다음과 같다.
+더욱 정확한 비교를 위해 Poller가 하나일 때, `netstat`를 확인해보았다. (SO_LINGER 옵션 off)
 
-| 지표 | 전 | 후 | 변화 |
-|-----|---|----|-----|
-| TCPAbortOnLinger | 3,249 | 3,337 | +88 |
-| DelayedACKs | 33,100 | 33,304 | +204 |
-| TCPAbortOnData | 11,527 | 11,873 | +346 |
-| TW(TimeWait) | 187,797 | 192,043 | +4,246 |
-| TCPTimeouts | 135 | 135 | 0 |
+예상대로 DelayedACKs가 293 -> 317로 **<U>8.2%</U>** 증가한 모습을 보인다.
 
-여기서 `DelayedACKs`가 204개로, 실제로 DelayedACKs가 일어나고 있음을 알 수 있으며, `TCPAbortOnData` 또한 346개나 증가했음을 확인할 수 있었다.
-
-TCPTimeouts는 저번 글(Multi-Poller 도입)에서와 마찬가지로 변화하지 않았다. 지연이 문제일 뿐, 재전송은 일어나지 않았기 때문이다.
-
-더욱 정확한 비교를 위해 Poller가 하나일 때도 같은 환경에서 테스트를 진행하였다. (SO_LINGER 옵션 ON)
-
-| 지표 | Poller 1개 | Poller 2개 | 변화 |
-|-----|---|----|-----|
-| DelayedACKs | 351 | 204 | Poller가 한 개일 때 지연 ACK가 더 빈번 |
-| TCPAbortOnData | 13,431 | 14,159 | Poller 2개일 때 빈번  |
-| TW(TimeWait) | 4,276 | 4,246 | 차이 X |
-
-여기서 TCPAbortOnData는 Poller 1개와 비교해서 **<U>5.4%</U>** 늘어난 반면, DelayedACKs는 **<U>41.9%</U>** 줄어든 이유는 무엇일까?
-
-`TCPAbortOnData`는 데이터를 보내는 중 연결이 예기치 않게 끊긴 소켓의 수로, close()를 하려는데 아직 수신 버퍼(Receive Buffer)에 데이터가 남아 있을 때 (읽어야 하는 패킷을 읽지 못하고 close()를 호출한 경우) 발생한다.
-
-Poller가 2개가 되며 요청을 처리하는 속도가 빨라지게 되고, close()가 빠르게 호출되며 클라이언트가 보낸 소켓을 끝까지 처리하지 못한 채 다음 패킷을 처리 해야 하는 상황이 발생했음을 보여준다.
+Poller가 두 개로 늘어나며 Delay되는 ACK가 증가하였음을 알 수 있다.
 
 <br/>
 
-그렇다면 왜 DelayedACKs는 줄어들었을까?
+또한, `TCPAbortOnClose`는 커널 수신 버퍼에 유저가 읽지 않은 데이터가 남아 있어 FIN 대신 RST를 날리고 강제 종료한 횟수를 말하는데, 여기서 RST 옵션은 TCP 표준 동작으로, 읽을 데이터가 남았는데 close()를 호출한다는 비정상적인 상황으로 판단하기 때문에 RST를 호출한다는 것이다.
 
-이건 당연한 소리일지도 모르겠지만, DelayedACKs는 어느 정도 패킷이 모이면 한 번에 보낼 수 있도록 해 주는 역할을 한다. Poller가 1개에서 2개로 변화하며, 이전보다 빠르게 패킷이 찼을 것이다. 따라서 어느 정도 기다린 후 보내는 패킷의 수가 줄어든 것이다.
+이 역시 170 -> 110으로 **<U>35%</U>** 감소했음을 확인할 수 있다. 강제 종료되는 횟수가 줄어들었으며, 이로 인해 Multi-Poller 도입 시 전체적인 지연 시간이 줄어든 것으로 볼 수 있다.
 
+참고로, 강제 종료 시 데이터 유실로 인한 재전송 등으로 정상 종료보다 늦어질 수 있다.
 
 ## 🫧 해결 방법
 
@@ -371,34 +346,109 @@ Poller가 2개가 되며 요청을 처리하는 속도가 빨라지게 되고, c
 
 그렇다면 SO_LINGER 옵션을 사용하지 않고, 근본적으로 패킷의 수를 천천히 처리하거나 줄일 수 있는 방법이 있는지 살펴보고자 했다.
 
-실제로, 테스트하면서 본 결과 `TCPAbortOnData`의 수치가 높게 나옴을 확인할 수 있었다.
+<br/>
 
-이는 데이터를 보내는 중 연결이 예기치 않게 끊긴 소켓의 수로, 너무 빠르게 close()를 해 버려 생기는 문제로도 해석할 수 있을 것이다.
+현재 문제가 되는 부분은 서버가 ACK를 보내고 -> 송신 버퍼에 데이터를 쓰고 -> FIN을 보낸 후, 클라이언트의 ACK를 받는 과정에서의 지연이다.
 
-다음은 실제 부하 테스트에서 사용된 코드이다.
+따라서 **송신 버퍼에 데이터를 쓰거나 ACK를 빠르게 받는 방식**으로 고치는 것을 생각하였다.
 
-![alt text](../../assets/image/Performance/cpuMaxLatency/testCode.png)
-
-`sendAndReceive` 코드 호출 이후 어떠한 응답이라도 온다면 성공으로 간주하고 바로 close()를 호출하는 부분이 문제였다.
-
-따라서 패킷을 기다리는 시간을 최대한 짧게 줄임으로써 문제를 해결할 수 있을 것이라 생각하였다.
-
-1. 어느 정도 대기 후 close() 호출하기
-2. SO_LINGER 옵션 활용
-3. 클라이언트의 DelayedACKs 옵션 끄기
-4. 응답 전송 시 비동기&콜백으로 전환
-
-1번의 경우 테스트 코드를 수정하면 되는 일이다. 그러나 이는 사용자의 환경을 건드는 일이므로, 올바른 수정 방법이라고 생각하지 않았다. 3번 또한 마찬가지이다.
-
-2번 또한 앞서 말한 것처럼 데이터가 유실되므로 적절하지 않다.
-
-따라서 4번, 응답 전송 시 **<U>비동기&콜백 방식으로 전환</U>**하여 지연을 줄이고자 했다.
+그러나 ACK의 경우는 클라이언트의 환경을 건드려야 하기 때문에, 서버 측에서 고칠 수 있는 부분인 **송신 버퍼에 데이터를 쓰는 과정**에서 지연을 줄이고자 하였다.
 
 <br/>
 
-전송 과정 자체를 비동기로 전환했기 때문에 DelayedACKs로 요청이 지연되어도 스레드는 다른 일을 할 수 있을 것이라고 생각했기 때문이다.
+### ✨ 송신 버퍼에 데이터를 쓰는 과정
 
-콜백의 경우도 마찬가지로, 응답을 완전히 받고 나서 sendMessage를 보내기 때문에 ACK를 기다리는 시간 중 버퍼에 쓰는 시간을 줄일 수 있다고 생각하였다.
+그렇다면 송신 버퍼에 데이터를 쓰는 과정은 어떻게 처리될까?
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/pollerRun1.png)
+
+위 사진처럼 Poller는 run() 메서드를 통해 서버가 실행되는 동안 스레드로써 무한 루프를 돌게 된다. 또한, select() 과정을 통해 Accept Queue에 이벤트가 추가되면 Selector을 깨우게 된다.
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/pollerRun2.png)
+
+run() 메서드 내에는 이런 코드도 존재한다. 이를 통해 Poller가 내부적으로 NioSocketWrapper를 활용하는 것을 알 수 있다.
+
+우선적으로 Poller가 `sk.attachment()`를 통해 사용 가능한 NioSocketWrapper 객체의 정보를 불러오고, 이것이 null이 아니라면 `processKey()`를 호출한다.
+
+<br/>
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/pollerRun3.png)
+
+위 사진은 `processKey()` 메서드의 일부 내용이다. 읽거나 쓰기가 가능한 경우 내부적으로 `processSendFile()`을 호출하는 것을 볼 수 있다.
+
+<br/>
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/processSendFile.png)
+
+실제로 위 사진처럼 `processSendFile()`에서는 직접적으로 쓰기 과정이 나타나게 되며, 이때 `transFor()` 함수는 아래와 같이 써져 있다.
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/transFor.png)
+
+즉, 직접적인 쓰기 과정이 Poller 스레드 내에서 실행되고 있음을 알 수 있다.
+
+<br/>
+
+정리하자면, Poller.run() -> 내부에서 NioSocketWrapper 객체 참조 가져오기 (객체일 뿐, 스레드는 아님. 따라서 Poller가 계속해서 실행) -> 이 객체가 읽거나 쓸 수 있는 경우 processSendFile 호출 후 직접적인 쓰기 과정이 나타남.
+
+이 과정에서 실행 주체는 결국 Poller이다.
+
+<br/>
+
+이미 기존 테스트를 통해 SO_LINGER 옵션을 통해 ACK를 받는 과정에서 응답이 튀었다는 사실은 알고 있었다. 그러나 Multi-Poller를 도입하면서 이 송수신 버퍼가 빠르게 비워져야 하는 것이 아닌가 하는 생각이 들었다.
+
+이 이유는 TCPAbortOnClose에서 찾을 수 있는데, 앞서 말했듯 TCPAbortOnClose의 값은 Poller가 하나에서 둘로 변화하면서 170 -> 110으로, **35% 감소**했음을 확인하였다. 대신 DelayedACKs가 293 -> 317로 **8.2% 증가**하여 딜레이되는 패킷이 늘어남을 알 수 있다.
+
+Multi-Poller를 도입하면서 전보다 더 빠르게 패킷을 처리할 수 있게 되었고, 이로 인해 수신 버퍼에서 읽어오는 속도가 확실히 증가했음은 알 수 있지만, 빠른 패킷이 한 무더기씩 가면서 DelayedACKs가 늘어난 것이라고 생각한다.
+
+<br/>
+
+#### 💡 방법 1: Poller를 하나 더 추가한다.
+
+가장 직관적인 방법은 Poller를 도입하는 것이겠지만, 현재 Poller 도입으로 인해 DelayedACKs가 늘어나 max Latency가 튄다는 문제가 발생하므로, Poller를 하나 더 도입하는 것은 임시방편책에 불과하지 않을 것이다.
+
+<br/>
+
+#### 💡 방법 2: 비동기 콜백 기반으로 전환한다.
+
+현재 문제가 되는 부분은 Poller가 과도한 일을 맡고 있다는 것이었다. 그러나 `jstack`으로 일정한 간격으로 30번의 스레드 덤프를 떠 확인한 결과, Poller는 여유롭게 처리하고 있는 것 같았다.
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/dumpPoller.png)
+
+(혹시 문제가 될 수도 있을 것 같아 몇몇 내용은 가렸습니다.)
+
+<br/>
+
+그렇다면 스레드가 부족함을 의심할 수 있다.
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/dumpThread.png)
+
+위 사진처럼 로직 실행 시 `get()`으로 결과를 받아오고 있는데, 이 과정에서 할당된 톰캣 스레드가 block 되어 결과를 받지 못하고, Poller의 쓰기까지 지연이 일어났던 것이라고 생각했다.
+
+실제로 TextWebSocketHandler의 handleTextMessage() 를 오버라이드한 내 코드는 따로 설정을 건드리지 않았기 때문에 기본적으로 톰캣 스레드로 수행이 된다.
+
+모든 Tomcat 스레드가 block 되어 있기 때문에 handleTextMessage()에서 수행된 결과를 write()할 수 있는 시작의 시기가 늦어지는 것이다.
+
+따라서 톰캣 스레드가 직접 실행하지 않고 비동기 처리를 한다면 문제를 해결할 수 있을 것이라 생각하였다.
+
+이를 증명하기 위해 스레드 덤프를 활용해 스레드의 상태를 파악해 보았다.
+
+<br/>
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/dumpThread2.png)
+
+평소는 이렇게 waiting 상태였지만, 가끔 아래 사진처럼 직접 오버라이딩한 `handleTextMessage()`가 실행됨을 알 수 있다.
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/dumpThread3.png)
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/dumpThread4.png)
+
+직접 구현한 WebSocketHandler.handleTextMessage()가 실행되고 있음을 파악할 수 있었다.
+
+<br/>
+
+해당 상태가 드물지만 종종 나타나고 있었는데, 이는 Multi-Poller를 도입하면서 전체적인 성능은 개선되었지만 (대부분의 tomcat thread가 waiting 상태) 간혹 run()에서 일시적으로 block되어 이 과정에서 close()시 튀는 현상이 발견되는 것 같았다.
+
+따라서 비동기 콜백 전환을 통해 톰캣 스레드가 block되어 일시적으로 튀는 현상을 해결하고자 한다.
 
 이를 통해 4-way handshake 과정에서 서버가 FIN을 보낸 이후 다시 ACK를 받기까지의 과정에 드는 지연 시간을 줄이고자 했다.
 
@@ -421,25 +471,25 @@ protected void handleTextMessage(WebSocketSession session, TextMessage message) 
                 throw new RuntimeException(e);
             }
         }).thenAccept(result -> {
-            // 2. 비즈니스 로직 완료 후 실행될 콜백 블록
+            // 2. 결과 얻은 후 실행
             try {
-                // 세션 상태 확인
+                // 세션이 열려 있다면
                 if (!session.isOpen()) {
-                    log.error("ERROR: 세션이 이미 닫혀 있습니다. (SessionID: {})", session.getId());
+                    log.error("[ERROR] 세션이 이미 닫혀 있습니다. (SessionID: {})", session.getId());
                     return;
                 }
 
-                // 성공 응답 생성 및 전송
+                // 응답 보내기
                 String jsonResponse = mapper.writeValueAsString(ResponseUtil.success(result));
                 session.sendMessage(new TextMessage(jsonResponse));
 
             } catch (Exception e) {
-                log.error("메시지 전송 중 오류 발생", e);
+                log.error("결과 반환 후 응답 보내는 과정 중 오류:", e);
             }
         });
 
     } catch (Exception e) {
-        log.error("초기 데이터 파싱 오류", e);
+        log.error("handleTextMessage 시 오류 발생:", e);
     }
 }
 ```
@@ -460,7 +510,6 @@ protected void handleTextMessage(WebSocketSession session, TextMessage message) 
 |-----|---|----|-----|
 | TCPAbortOnLinger | 0 | 89 | 도입 후 손실되는 패킷 발생 |
 | DelayedACKs | 317 | 203 | 도입 후 지연 발생 빈도 낮아짐 |
-| TCPAbortOnData | 1,653 | 1,600 | 여전히 둘다 수신 버퍼 병목 발생 |
 | TW(TimeWait) | 4,162 | 4,184 | 도입 후 처리 속도가 미세하게 빨라짐 |
 | TCPTimeouts | 0 | 0 | 둘다 타임아웃 X |
 | TCPOrigDataSent | 77,575 | 81,816 | 도입 후 전송 시도량 5.5% 증가 |
@@ -482,6 +531,14 @@ protected void handleTextMessage(WebSocketSession session, TextMessage message) 
 그러나 이 부분을 수정하기 위해서는 지연 시간이 길어질 수밖에 없는데, 이는 실시간성을 보장하지 못하는 요인으로 생각되었다.
 
 이를 어떤 식으로 해결하면 좋을지 생각하다가, 현재 문제가 되고 있는 close() 호출에 1초 지연을 두고 닫기로 하였다.
+
+<br/>
+
+현재는 아래와 같은 상태로, 바로 close()를 호출해 문제가 발생한다고 판단하였기 때문이다.
+
+
+![alt text](../../assets/image/Performance/cpuMaxLatency/testCode.png)
+
 
 <br/>
 
@@ -536,7 +593,7 @@ close() 과정에서 Max Latency가 튀는 이유는 4-way handshake 과정에�
 
 이를 `LO_LANGER`를 활용해 ACK 요청을 기다리지 않고 바로 받을 수 있게 테스트하였는데, Max Latency가 잡히며 문제가 해결됨을 알 수 있었다.
 
-그러나 실제로 결과로 오는 json이 일부 유실되는 등 문제가 발생하였다. 이는 가설 검증을 위한 임시 해결책임을 깨닫고, `sendMessage` 함수를 비동기 콜백 함수로 전환하여 Max Latency를 **<U>41.5% 감소</U>**시킬 수 있었다.
+그러나 실제로 결과로 오는 json이 일부 유실되는 등 문제가 발생하였다. 이는 가설 검증을 위한 임시 해결책임을 깨닫고, `handleTextMessage` 함수를 비동기 콜백 함수로 전환하여 Max Latency를 **<U>41.5% 감소</U>**시킬 수 있었다.
 
 하지만 여전히 연결이 중간에 끊기는 데이터가 1,600건이 존재한다는 문제가 있었다. 따라서 close() 호출 전 0.1초의 지연 시간을 두어 `TCPAbortOnData` 값을 135로, **<U>91% 감소</U>**시킬 수 있었다.
 

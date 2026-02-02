@@ -454,7 +454,7 @@ Multi-Poller를 도입하면서 전보다 더 빠르게 패킷을 처리할 수 
 
 ## 🫧 해결 (테스트 결과)
 
-동기적으로 구현되어 있던 sendMessage 부분을 비동기 콜백 함수로 교체한 코드이다.
+동기적으로 구현되어 있던 handleTextMessage 부분을 비동기 콜백 함수로 교체한 코드이다.
 
 ```java
 @Override

@@ -1,5 +1,5 @@
 ---
-title: "[Performance] Async-Blocking으로 인한 이중 스레드 블로킹 문제 해결 (Thread 생성 96% 감소)"
+title: "[Performance] Async-Blocking 구조 개선으로 Max Latency 98.3% 감소 및 500 Timeout 제거"
 categories:
   - Performance
 tags:
